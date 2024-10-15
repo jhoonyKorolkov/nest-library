@@ -1,37 +1,40 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, UsePipes } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { BookDto } from './dto/create-book.dto';
+import { CreateBookDto } from './dto/create-book.dto';
 import { Book } from './schemas/book.schema';
+
+import { LoggerInterceptor } from '../interceptor/logger.interceptor';
+import { ValidationCustomPipe } from './pipes/validate.cutom.pipe';
+import { ValidateIdPipe } from './pipes/validate.id.pipe';
 
 @Controller('book')
 export class BooksController {
-  constructor(private readonly booksService: BooksService) {}
+    constructor(private readonly booksService: BooksService) {}
 
-  @Post()
-  create(@Body() body: BookDto): Promise<Book> {
-    return this.booksService.create(body);
-  }
+    @UsePipes(ValidationCustomPipe)
+    @Post()
+    create(@Body() body: CreateBookDto): Promise<Book> {
+        return this.booksService.create(body);
+    }
 
-  @Get()
-  findAll(): Promise<Book[]> {
-    return this.booksService.findAll();
-  }
+    @Get()
+    findAll(): Promise<Book[]> {
+        return this.booksService.findAll();
+    }
 
-  @Put(':id')
-  updateBook(@Param('id') id: string, @Body() body: BookDto): Promise<Book> {
-    return this.booksService.updateBook(id, body);
-  }
+    @UseInterceptors(LoggerInterceptor)
+    @Get(':id')
+    findBook(@Param('id', ValidateIdPipe) id: string): Promise<Book> {
+        return this.booksService.findBook(id);
+    }
 
-  @Delete(':id')
-  deleteBook(@Param('id') id: string) {
-    return this.booksService.deleteBook(id);
-  }
+    @Put(':id')
+    updateBook(@Param('id') id: string, @Body() body: CreateBookDto): Promise<Book> {
+        return this.booksService.updateBook(id, body);
+    }
+
+    @Delete(':id')
+    deleteBook(@Param('id') id: string) {
+        return this.booksService.deleteBook(id);
+    }
 }
