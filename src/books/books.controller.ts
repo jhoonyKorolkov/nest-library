@@ -3,7 +3,7 @@ import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Book } from './schemas/book.schema';
 
-import { LoggerInterceptor } from '../interceptor/logger.interceptor';
+import { LoggerInterceptor } from './interceptor/logger.interceptor';
 import { ValidationCustomPipe } from './pipes/validate.cutom.pipe';
 import { ValidateIdPipe } from './pipes/validate.id.pipe';
 
