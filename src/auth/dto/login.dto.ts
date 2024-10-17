@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-export class UserDto {
+export class LoginDto {
     @IsString({ message: 'Поле "Email" должно быть строкой' })
     @IsEmail({}, { message: 'Некорректный адрес электронной почты' })
     @IsNotEmpty({ message: 'Поле не может быть пустым' })

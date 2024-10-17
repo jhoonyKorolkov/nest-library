@@ -5,11 +5,13 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
     constructor(
-        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        @InjectModel(User.name)
+        private userModel: Model<UserDocument>,
         private jwtService: JwtService
     ) {}
 
@@ -21,8 +23,31 @@ export class AuthService {
             password: hashedPassword,
         });
 
-        const { password, ...payload } = await createdUser.save();
+        const { password, _id, ...rest } = await createdUser.save();
 
+        const payload = { sub: _id, rest };
+
+        const token = this.jwtService.sign(payload);
+
+        return { token };
+    }
+
+    async login(loginDto: LoginDto): Promise<{ token: string }> {
+        const user = await this.userModel.findOne({ email: loginDto.email });
+
+        if (!user) {
+            throw new UnauthorizedException('Пользователь не найден');
+        }
+
+        const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
+
+        if (!isPasswordValid) {
+            throw new UnauthorizedException('Не верный пароль');
+        }
+
+        const { password, _id, ...rest } = user;
+
+        const payload = { sub: _id, ...rest };
         const token = this.jwtService.sign(payload);
 
         return { token };
@@ -31,7 +56,7 @@ export class AuthService {
     async validateUserById(userId: string): Promise<any> {
         const user = await this.userModel.findById(userId);
         if (!user) {
-            throw new UnauthorizedException('User not found');
+            throw new UnauthorizedException('Пользователь не найден');
         }
         return {
             userId: user._id,

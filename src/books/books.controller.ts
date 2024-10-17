@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Book } from './schemas/book.schema';
 
 import { LoggerInterceptor } from './interceptor/logger.interceptor';
-import { ValidationCustomPipe } from './pipes/validate.cutom.pipe';
-import { ValidateIdPipe } from './pipes/validate.id.pipe';
+import { ValidationCustomPipe } from '../pipes/validate.cutom.pipe';
+import { ValidateIdPipe } from '../pipes/validate.id.pipe';
+import { JwtAuthGuard } from '../auth/auth.guard';
 
 @Controller('book')
 export class BooksController {
@@ -17,6 +18,7 @@ export class BooksController {
         return this.booksService.create(body);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     findAll(): Promise<Book[]> {
         return this.booksService.findAll();
