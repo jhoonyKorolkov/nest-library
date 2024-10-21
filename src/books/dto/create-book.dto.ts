@@ -22,5 +22,5 @@ export class CreateBookDto {
     @IsArray({ message: 'Теги должны быть массивом' })
     @ArrayNotEmpty({ message: 'Массив тегов не может быть пустым' })
     @IsString({ each: true, message: 'Каждый тег должен быть строкой' })
-    tags: string[];
+    tags?: string[];
 }
