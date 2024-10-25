@@ -1,0 +1,24 @@
+<script src="https://cdn.socket.io/4.8.0/socket.io.min.js"
+  integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+<script>
+  const socket = io('http://localhost:3000');
+  socket.emit('addComment', {
+    bookId: 1729836479438,
+    comment: 'xzxzx'
+  });
+
+  socket.emit('getComments',
+    1729836479438,
+  );
+
+  socket.on('commentAdded', (newComment) => {
+    console.log('Новый комментарий добавлен:', newComment);
+  });
+
+  socket.on('seeAllComments', (comments) => {
+    console.log('Все комментарии:', comments);
+  });
+
+
+
+</script>

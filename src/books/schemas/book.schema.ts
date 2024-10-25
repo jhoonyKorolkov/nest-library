@@ -7,6 +7,9 @@ export type BookDocument = HydratedDocument<Book>;
 @Schema({ versionKey: false })
 export class Book {
     @Prop({ required: true })
+    id: number;
+
+    @Prop({ required: true })
     name: string;
 
     @Prop({ required: true })

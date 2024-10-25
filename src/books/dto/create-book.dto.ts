@@ -2,6 +2,8 @@ import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsStri
 import { Status } from '../enum';
 
 export class CreateBookDto {
+    id: number;
+
     @IsString({ message: 'Поле "Название книги" должно быть строкой' })
     @IsNotEmpty({ message: 'Название книги не может быть пустым' })
     name: string;

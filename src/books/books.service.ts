@@ -9,7 +9,12 @@ export class BooksService {
     constructor(@InjectModel(Book.name) private bookModel: Model<BookDocument>) {}
 
     async create(data: CreateBookDto): Promise<BookDocument> {
-        const book = new this.bookModel(data);
+        const bookData = {
+            id: new Date().getTime(),
+            ...data,
+        };
+
+        const book = new this.bookModel(bookData);
         return await book.save();
     }
 
