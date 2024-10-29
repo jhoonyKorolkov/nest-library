@@ -1,9 +1,11 @@
 import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Status } from '../enum';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateBookDto {
     id: number;
 
+    @ApiProperty({ example: 'Item name', description: 'The name of the item' })
     @IsString({ message: 'Поле "Название книги" должно быть строкой' })
     @IsNotEmpty({ message: 'Название книги не может быть пустым' })
     name: string;

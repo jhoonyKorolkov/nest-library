@@ -7,8 +7,10 @@ import { LoggerInterceptor } from './interceptor/logger.interceptor';
 import { ValidationCustomPipe } from '../pipes/validate.cutom.pipe';
 import { ValidateIdPipe } from '../pipes/validate.id.pipe';
 import { JwtAuthGuard } from '../auth/auth.guard';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('book')
+@ApiTags('book')
 export class BooksController {
     constructor(private readonly booksService: BooksService) {}
 
@@ -18,7 +20,9 @@ export class BooksController {
         return this.booksService.create(body);
     }
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'Get all items' })
+    @ApiResponse({ status: 200, description: 'List of items returned successfully.' })
     @Get()
     findAll(): Promise<Book[]> {
         return this.booksService.findAll();
